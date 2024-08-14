@@ -24,7 +24,16 @@ values (
     'https://www.wired.com/story/how-30-lines-of-code-blew-up-27-ton-generator/',
     'How 30 Lines of Code Blew Up a 27-Ton Generator', 
     false,
-    ['physical-infra'], 
+    ['physical-infrastructure'], 
+ ),
+ (
+    uuid(),
+    get_current_timestamp(),
+    get_current_timestamp(),
+    'https://open.spotify.com/episode/2EGyoSBSsuEnah0CYFTQiF?si=e7ca90633b0e49ad',
+    'My Climate Journey: Advancing Nuclear Innovation with INL''s Dr. John Wagner',
+    true,
+    ['physical-infrastructure']
  )
  ;
 
