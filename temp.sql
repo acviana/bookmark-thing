@@ -1,3 +1,6 @@
+--
+-- Table creation prototype
+--
 create or replace table bookmark (
     id uuid primary key,
     ctime timestamptz,
@@ -9,6 +12,9 @@ create or replace table bookmark (
 )
 ;
 
+--
+-- Table insertion prototype
+--
 insert into bookmark 
 by position
 values (
@@ -21,6 +27,19 @@ values (
     ['physical-infra'], 
  )
  ;
+
+--
+-- Table update protoptye
+--
+update bookmark
+set 
+    mtime = get_current_timestamp(),
+    is_read = true
+where id = (
+    SELECT id 
+    FROM bookmark
+    where title='How 30 Lines of Code Blew Up a 27-Ton Generator'
+);
 
 select *
 from bookmark
