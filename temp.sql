@@ -24,7 +24,7 @@ values (
     'https://www.wired.com/story/how-30-lines-of-code-blew-up-27-ton-generator/',
     'How 30 Lines of Code Blew Up a 27-Ton Generator', 
     false,
-    ['physical-infrastructure'], 
+    ['physical-infrastructure', 'hacking'], 
  ),
  (
     uuid(),
@@ -33,7 +33,7 @@ values (
     'https://open.spotify.com/episode/2EGyoSBSsuEnah0CYFTQiF?si=e7ca90633b0e49ad',
     'My Climate Journey: Advancing Nuclear Innovation with INL''s Dr. John Wagner',
     true,
-    ['physical-infrastructure']
+    ['physical-infrastructure', 'nuclear-energy']
  )
  ;
 
@@ -50,8 +50,25 @@ where id = (
     where title='How 30 Lines of Code Blew Up a 27-Ton Generator'
 );
 
-select *
-from bookmark
+---
+--- Show all the entries
+---
+select * from bookmark;
+
+---
+--- Show tag counts
+---
+SELECT
+    tag['tags'],
+    COUNT(*) AS tag_count
+FROM
+    bookmark,
+    UNNEST(tags) AS tag
+GROUP BY
+    tag
+ORDER BY
+    tag_count DESC
 ;
+
 
 describe bookmark;
