@@ -3,11 +3,11 @@
 --
 create or replace table bookmark (
     id uuid primary key,
-    ctime timestamptz,
-    mtime timestamptz,
-    url varchar,
-    title varchar,
-    is_read boolean,
+    ctime timestamptz NOT NULL,
+    mtime timestamptz NOT NULL,
+    url varchar NOT NULL,
+    title varchar NOT NULL,
+    is_read boolean NOT NULL,
     tags varchar[]
 )
 ;
