@@ -5,7 +5,7 @@ create or replace table bookmark (
     id uuid primary key,
     ctime timestamptz NOT NULL,
     mtime timestamptz NOT NULL,
-    url varchar NOT NULL,
+    url varchar UNIQUE NOT NULL,
     title varchar NOT NULL,
     is_read boolean NOT NULL,
     tags varchar[]
@@ -70,5 +70,18 @@ ORDER BY
     tag_count DESC
 ;
 
+---
+--- Update a tag list
+--- Fails due to known bug: https://github.com/duckdb/duckdb/discussions/10701
+---
+UPDATE bookmark
+SET 
+    mtime = get_current_timestamp(),
+    tags = list_append(tags, 'test_tag')
+WHERE id = (
+    SELECT id
+    FROM bookmark
+    WHERE title = 'How 30 Lines of Code Blew Up a 27-Ton Generator'
+);
 
 describe bookmark;
