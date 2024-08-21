@@ -15,10 +15,9 @@ create or replace table bookmark (
 --
 -- Table insertion prototype
 --
-insert into bookmark 
-by position
+insert into bookmark (id, ctime, mtime, url, title, is_read, tags)
 values (
-    uuid(), 
+    uuid(),
     get_current_timestamp(), 
     get_current_timestamp(),
     'https://www.wired.com/story/how-30-lines-of-code-blew-up-27-ton-generator/',
@@ -44,8 +43,8 @@ update bookmark
 set 
     mtime = get_current_timestamp(),
     is_read = true
-where id = (
-    SELECT id 
+where url = (
+    SELECT url
     FROM bookmark
     where title='How 30 Lines of Code Blew Up a 27-Ton Generator'
 );
@@ -78,8 +77,8 @@ UPDATE bookmark
 SET 
     mtime = get_current_timestamp(),
     tags = list_append(tags, 'test_tag')
-WHERE id = (
-    SELECT id
+WHERE url = (
+    SELECT url 
     FROM bookmark
     WHERE title = 'How 30 Lines of Code Blew Up a 27-Ton Generator'
 );
