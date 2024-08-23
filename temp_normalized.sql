@@ -9,7 +9,9 @@ create or replace table bookmarks (
     mtime timestamptz NOT NULL,
     url varchar UNIQUE NOT NULL,
     title varchar NOT NULL,
+    author varchar,
     is_read boolean NOT NULL,
+    notes varchar,
 );
 
 --- many-to-many join-table
