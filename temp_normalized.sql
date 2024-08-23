@@ -106,12 +106,16 @@ values (
  SELECT * from bookmarks_tags;
  
  --- Master View
+ CREATE OR REPLACE VIEW main AS 
  SELECT
     bookmarks.title,
+    string_agg(tags.tag, ', ') as tag_list,
+    bookmarks.ctime,
     bookmarks.url,
-    string_agg(tags.tag, ', ') as tag_list
  from bookmarks_tags
  join bookmarks on bookmarks_tags.bookmarks_id = bookmarks.id 
  join tags on bookmarks_tags.tags_id = tags.id
- GROUP BY url, title
- ORDER BY url, title;
+ GROUP BY url, title, bookmarks.ctime
+ ORDER BY url, title, bookmarks.ctime;
+ 
+ select * from main;
