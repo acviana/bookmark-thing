@@ -14,7 +14,7 @@ create or replace table bookmarks (
     notes varchar,
 );
 
---- many-to-many join-table
+-- Tags table
 create or replace table tags (
     id uuid primary key,
     ctime timestamptz NOT NULL,
@@ -22,7 +22,7 @@ create or replace table tags (
     tag varchar,
 );
 
--- Tags table
+--- Many-to-many join-table
 create or replace table bookmarks_tags(
     id uuid primary key,
     bookmarks_id uuid NOT NULL,
@@ -31,9 +31,25 @@ create or replace table bookmarks_tags(
     foreign key (tags_id) references tags (id),
 );
 
+ --- Master View
+ CREATE OR REPLACE VIEW main AS 
+ SELECT
+    bookmarks.title,
+    string_agg(tags.tag, ', ') as tag_list,
+    bookmarks.ctime,
+    bookmarks.url,
+ from bookmarks_tags
+ join bookmarks on bookmarks_tags.bookmarks_id = bookmarks.id 
+ join tags on bookmarks_tags.tags_id = tags.id
+ GROUP BY url, title, bookmarks.ctime
+ ORDER BY url, title, bookmarks.ctime;
+
 ---
 --- Insert Data
 ---
+
+
+-- TODO: Add Transaction
 
 insert into bookmarks (id, ctime, mtime, url, title, is_read)
 values (
@@ -43,7 +59,6 @@ values (
     'https://www.wired.com/story/how-30-lines-of-code-blew-up-27-ton-generator/',
     'How 30 Lines of Code Blew Up a 27-Ton Generator', 
     false,
---    ['physical-infrastructure', 'hacking'], 
  ),
  (
     uuid(),
@@ -52,7 +67,6 @@ values (
     'https://open.spotify.com/episode/2EGyoSBSsuEnah0CYFTQiF?si=e7ca90633b0e49ad',
     'My Climate Journey: Advancing Nuclear Innovation with INL''s Dr. John Wagner',
     true,
---    ['physical-infrastructure', 'nuclear-energy']
  )
  ;
  
@@ -106,18 +120,4 @@ values (
  SELECT * from bookmarks;
  SELECT * from tags;
  SELECT * from bookmarks_tags;
- 
- --- Master View
- CREATE OR REPLACE VIEW main AS 
- SELECT
-    bookmarks.title,
-    string_agg(tags.tag, ', ') as tag_list,
-    bookmarks.ctime,
-    bookmarks.url,
- from bookmarks_tags
- join bookmarks on bookmarks_tags.bookmarks_id = bookmarks.id 
- join tags on bookmarks_tags.tags_id = tags.id
- GROUP BY url, title, bookmarks.ctime
- ORDER BY url, title, bookmarks.ctime;
- 
  select * from main;
