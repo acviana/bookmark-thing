@@ -1,3 +1,6 @@
+--- Cascading delete to reset everything
+drop table bookmarks_tags cascade;
+
 ---
 --- Create tables
 ---
@@ -50,7 +53,7 @@ create or replace table bookmarks_tags(
 
 
 -- TODO: Add Transaction
-
+begin transaction;
 insert into bookmarks (id, ctime, mtime, url, title, is_read)
 values (
     uuid(),
@@ -111,6 +114,7 @@ values (
     (select id from bookmarks where url = 'https://open.spotify.com/episode/2EGyoSBSsuEnah0CYFTQiF?si=e7ca90633b0e49ad'),
     (select id from tags where tag = 'nuclear-energy')    
  );
+ commit;
  
  ---
  --- Query the data
