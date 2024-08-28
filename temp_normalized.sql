@@ -34,25 +34,46 @@ create or replace table bookmarks_tags(
     foreign key (tags_id) references tags (id),
 );
 
- --- Master View
- CREATE OR REPLACE VIEW main AS 
- SELECT
+
+---
+--- Views
+---
+
+
+--- Master View
+CREATE OR REPLACE VIEW main AS 
+SELECT
     bookmarks.title,
     string_agg(tags.tag, ', ') as tag_list,
     bookmarks.ctime,
     bookmarks.url,
- from bookmarks_tags
- join bookmarks on bookmarks_tags.bookmarks_id = bookmarks.id 
- join tags on bookmarks_tags.tags_id = tags.id
- GROUP BY url, title, bookmarks.ctime
- ORDER BY url, title, bookmarks.ctime;
+FROM bookmarks
+LEFT JOIN bookmarks_tags ON bookmarks.id = bookmarks_tags.bookmarks_id
+LEFT JOIN tags ON bookmarks_tags.tags_id = tags.id
+GROUP BY url, title, bookmarks.ctime
+ORDER BY url, title, bookmarks.ctime;
+
+--- Tag Count View
+CREATE OR REPLACE VIEW tag_count AS
+SELECT
+  tag,
+  count(bookmarks_tags.bookmarks_id) AS count,
+FROM
+  tags
+LEFT JOIN
+  bookmarks_tags ON tags.id = bookmarks_tags.tags_id
+GROUP BY
+  tag
+ORDER BY
+  count DESC, tag;
+
 
 ---
 --- Insert Data
 ---
 
 
--- TODO: Add Transaction
+-- Sample Data Insert
 begin transaction;
 insert into bookmarks (id, ctime, mtime, url, title, is_read)
 values (
